@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xtool CMD - Web Terminal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/terminal.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="terminal-title">Xtool CMD Terminal</div>
+            <div class="terminal-controls">
+                <span class="control minimize"></span>
+                <span class="control maximize"></span>
+                <span class="control close"></span>
+            </div>
+        </div>
+        
+        <div class="terminal-body">
+            <div class="terminal-output" id="output">
+                <div class="welcome-message">
+                    <pre class="ascii-art">
+ __   __ _____           _    _____ __  __ _____  
+ \ \ / /|_   _|         | |  / ____|  \/  |  __ \ 
+  \ V /   | |  ___   ___| | | |    | \  / | |  | |
+   > <    | | / _ \ / _ \ | | |    | |\/| | |  | |
+  / . \  _| || (_) | (_) | || |____| |  | | |__| |
+ /_/ \_\|_____\___/ \___/|_| \_____|_|  |_|_____/ 
+                                                  
+                                                  
+                    </pre>
+                    <p>Welcome to Xtool CMD Web Terminal v1.0</p>
+                    <p>Type 'help' to see available commands</p>
+                </div>
+            </div>
+            <div class="terminal-input-line">
+                <span class="prompt">user@xtool:~$</span>
+                <input type="text" id="command-input" autofocus>
+            </div>
+        </div>
+        
+        <div class="terminal-footer">
+            <div class="status-indicator online"></div>
+            <span class="status-text">Online</span>
+            <div class="terminal-info">Xtool CMD v1.0</div>
+        </div>
+    </div>
+
+    <div class="command-palette">
+        <div class="palette-header">Available Commands</div>
+        <div class="palette-commands">
+            {% for command in commands %}
+            <div class="palette-command">{{ command }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/terminal.js') }}"></script>
+</body>
+</html>

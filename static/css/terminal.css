@@ -1,0 +1,479 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --terminal-bg: #1e1e1e;
+    --terminal-text: #f0f0f0;
+    --terminal-header: #333;
+    --terminal-border: #444;
+    --terminal-prompt: #4CAF50;
+    --terminal-shadow: rgba(0, 0, 0, 0.5);
+    --terminal-highlight: #0078d7;
+    --terminal-error: #ff5252;
+    --terminal-success: #4CAF50;
+    --terminal-warning: #FFC107;
+    --terminal-info: #2196F3;
+    --terminal-selection: rgba(79, 156, 240, 0.3);
+    --terminal-cursor: #f0f0f0;
+    --terminal-link: #64B5F6;
+    --terminal-command: #FF9800;
+    --terminal-output: #BBDEFB;
+    --terminal-footer: #252525;
+    --terminal-scrollbar: #555;
+    --terminal-scrollbar-thumb: #888;
+    --terminal-palette-bg: rgba(40, 44, 52, 0.9);
+}
+
+body {
+    font-family: 'Fira Code', monospace;
+    background: linear-gradient(135deg, #2c3e50, #1a1a2e);
+    color: var(--terminal-text);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 20%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.01) 0%, transparent 100%);
+    z-index: -1;
+}
+
+/* Terminal Container */
+.terminal-container {
+    width: 80%;
+    height: 80vh;
+    background-color: var(--terminal-bg);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px var(--terminal-shadow), 
+                0 0 0 1px var(--terminal-border),
+                inset 0 0 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    animation: terminal-startup 0.5s ease-out;
+    border: 1px solid var(--terminal-border);
+}
+
+@keyframes terminal-startup {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Terminal Header */
+.terminal-header {
+    background-color: var(--terminal-header);
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--terminal-border);
+    user-select: none;
+}
+
+.terminal-title {
+    font-weight: 600;
+    font-size: 14px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.5px;
+}
+
+.terminal-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.control.close {
+    background-color: #ff5f56;
+}
+
+.control.minimize {
+    background-color: #ffbd2e;
+}
+
+.control.maximize {
+    background-color: #27c93f;
+}
+
+.control:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Terminal Body */
+.terminal-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    background: 
+        linear-gradient(rgba(30, 30, 30, 0.7), rgba(30, 30, 30, 0.7)),
+        repeating-linear-gradient(
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.05) 2px,
+            rgba(0, 0, 0, 0.05) 4px
+        );
+}
+
+.terminal-body::-webkit-scrollbar {
+    width: 10px;
+    background-color: var(--terminal-scrollbar);
+}
+
+.terminal-body::-webkit-scrollbar-thumb {
+    background-color: var(--terminal-scrollbar-thumb);
+    border-radius: 5px;
+}
+
+.terminal-output {
+    flex: 1;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.welcome-message {
+    color: var(--terminal-info);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.welcome-message p {
+    margin: 5px 0;
+    animation: fade-in 1s ease-in-out;
+}
+
+.ascii-art {
+    color: var(--terminal-highlight);
+    font-size: 12px;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px rgba(79, 156, 240, 0.5);
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px rgba(79, 156, 240, 0.5);
+    }
+    to {
+        text-shadow: 0 0 15px rgba(79, 156, 240, 0.8);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    animation: blink-border 2s infinite alternate;
+}
+
+@keyframes blink-border {
+    from {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    to {
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+}
+
+.prompt {
+    color: var(--terminal-prompt);
+    margin-right: 10px;
+    font-weight: 500;
+    text-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+#command-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--terminal-text);
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    outline: none;
+    caret-color: var(--terminal-cursor);
+}
+
+/* Command output styling */
+.command-entry {
+    margin-bottom: 15px;
+    animation: slide-in 0.3s ease-out;
+}
+
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.command-text {
+    color: var(--terminal-command);
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.command-output {
+    color: var(--terminal-output);
+    padding-left: 15px;
+    border-left: 2px solid rgba(187, 222, 251, 0.3);
+}
+
+.error-output {
+    color: var(--terminal-error);
+    padding-left: 15px;
+    border-left: 2px solid rgba(255, 82, 82, 0.5);
+}
+
+/* Terminal Footer */
+.terminal-footer {
+    background-color: var(--terminal-footer);
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--terminal-border);
+    font-size: 12px;
+    color: rgba(240, 240, 240, 0.7);
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-indicator.online {
+    background-color: var(--terminal-success);
+    box-shadow: 0 0 5px var(--terminal-success);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 5px rgba(76, 175, 80, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+    }
+}
+
+.terminal-info {
+    margin-left: auto;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+/* Command Palette */
+.command-palette {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 200px;
+    background-color: var(--terminal-palette-bg);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    border: 1px solid var(--terminal-border);
+    backdrop-filter: blur(5px);
+    transform: translateX(250px);
+    transition: transform 0.3s ease;
+    z-index: 100;
+}
+
+.terminal-container:hover + .command-palette,
+.command-palette:hover {
+    transform: translateX(0);
+}
+
+.palette-header {
+    background-color: var(--terminal-header);
+    padding: 10px;
+    text-align: center;
+    font-weight: 600;
+    border-bottom: 1px solid var(--terminal-border);
+}
+
+.palette-commands {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.palette-command {
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.palette-command:hover {
+    background-color: var(--terminal-highlight);
+    transform: translateX(5px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .terminal-container {
+        width: 95%;
+        height: 90vh;
+    }
+    
+    .command-palette {
+        display: none;
+    }
+}
+
+/* Selection styling */
+::selection {
+    background-color: var(--terminal-selection);
+    color: white;
+}
+
+/* Additional animations */
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+.typing-effect {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 3.5s steps(40, end);
+}
+
+/* Custom scrollbar for the entire page */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--terminal-scrollbar-thumb);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+/* Blinking cursor effect */
+.cursor {
+    display: inline-block;
+    width: 10px;
+    height: 18px;
+    background-color: var(--terminal-cursor);
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    from, to { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Matrix rain effect in the background */
+.matrix-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    opacity: 0.05;
+}
+
+/* Neon glow effects */
+.neon-text {
+    color: #fff;
+    text-shadow: 
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 15px #0073e6,
+        0 0 20px #0073e6,
+        0 0 25px #0073e6,
+        0 0 30px #0073e6,
+        0 0 35px #0073e6;
+}
+
+/* Gradient text */
+.gradient-text {
+    background: linear-gradient(45deg, #12c2e9, #c471ed, #f64f59);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradient 15s ease infinite;
+    background-size: 400% 400%;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
