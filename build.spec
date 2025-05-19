@@ -1,3 +1,6 @@
+# You should download every SRC from this project, and install the 'Pyinstaller' by using the 'pip', then run 'pyinstaller build.spec', it will install the app and its support your System!
+# (That's the solution when you want to install with 'Pyinstaller')
+
 # -*- mode: python -*-
 
 block_cipher = None
