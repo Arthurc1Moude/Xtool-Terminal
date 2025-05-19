@@ -1,0 +1,72 @@
+name: Build Multi-Platform Executables
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        include:
+          - os: ubuntu-latest
+            artifact-name: linux-build
+          - os: windows-latest
+            artifact-name: windows-build
+          - os: macos-latest
+            artifact-name: macos-build
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install system dependencies (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y binutils
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Install application dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build executable
+        shell: bash
+        run: |
+          # 统一处理路径格式
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            DATA_FLAGS="--add-data 'static;static' --add-data 'templates;templates' --add-data 'commands;commands'"
+          else
+            DATA_FLAGS="--add-data 'static:static' --add-data 'templates:templates' --add-data 'commands:commands'"
+          fi
+
+          pyinstaller \
+            --onefile \
+            --name "YourApp_${{ runner.os }}" \
+            $DATA_FLAGS \
+            app.py
+
+      - name: Rename Windows executable
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: ren dist\YourApp_Windows.exe YourApp.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: |
+            dist/*
+            # 包含额外的资源文件（可选）
+            !dist/*.spec
