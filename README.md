@@ -93,6 +93,9 @@ exe = EXE(
 pyinstaller build.spec
 ```
 
+### Solution 3: GitHub Actions
+(We're trying to use GitHub Actions!)
+
 ## Available Commands
 
 - `hello [name]` - Greet the user
