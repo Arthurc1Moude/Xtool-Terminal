@@ -133,3 +133,9 @@ After adding a new command, restart the server to use it.
 ## License
 
 MIT License
+
+## Website
+
+Our website is: 
+\
+[Xtool CMD|v1.0](http://127.0.0.1:5500/Xtool-Website/index.html)
